@@ -1,13 +1,9 @@
 public class CalculatorUtil {
-    private static final double MALE_BMR_CONSTANT = 88.36;
-    private static final double MALE_WEIGHT_MULTIPLIER = 13.4;
-    private static final double MALE_HEIGHT_MULTIPLIER = 4.8;
-    private static final double MALE_AGE_MULTIPLIER = 5.7;
-
-    private static final double FEMALE_BMR_CONSTANT = 447.6;
-    private static final double FEMALE_WEIGHT_MULTIPLIER = 9.2;
-    private static final double FEMALE_HEIGHT_MULTIPLIER = 3.1;
-    private static final double FEMALE_AGE_MULTIPLIER = 4.3;
+    private static final double MALE_BMR_CONSTANT = 5;
+    private static final double FEMALE_BMR_CONSTANT = 161;
+    private static final double BMR_WEIGHT_CONSTANT = 10;
+    private static final double BMR_HEIGHT_CONSTANT = 6.25;
+    private static final double BMR_AGE_CONSTANT = 5;
 
     private static final double BODY_FAT_CONSTANT1 = 495;
     private static final double BODY_FAT_CONSTANT2 = 450;
@@ -25,8 +21,8 @@ public class CalculatorUtil {
     }
 
     public static double calculateBMR(String gender, double weightKG, double heightCM, int age) {
-        if (gender.equalsIgnoreCase("male")) return MALE_BMR_CONSTANT + (MALE_WEIGHT_MULTIPLIER * weightKG) + (MALE_HEIGHT_MULTIPLIER * heightCM) - (MALE_AGE_MULTIPLIER * age);
-        else return FEMALE_BMR_CONSTANT + (FEMALE_WEIGHT_MULTIPLIER * weightKG) + (FEMALE_HEIGHT_MULTIPLIER * heightCM) - (FEMALE_AGE_MULTIPLIER * age);
+        if (gender.equalsIgnoreCase("male")) return BMR_WEIGHT_CONSTANT * weightKG + BMR_HEIGHT_CONSTANT * heightCM - BMR_AGE_CONSTANT * age + MALE_BMR_CONSTANT;
+        else return BMR_WEIGHT_CONSTANT * weightKG + BMR_HEIGHT_CONSTANT * heightCM - BMR_AGE_CONSTANT * age - FEMALE_BMR_CONSTANT;
     }
 
     public static double calculateTDEE(double bmr, double activityLevelMultiplier) {
