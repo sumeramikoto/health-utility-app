@@ -49,11 +49,11 @@ public class UserInterface {
             case 2 -> viewBMI();
             case 3 -> viewBMR();
             case 4 -> viewTDEE();
-//            case 5 -> calculateBodyFatPercentage();
-//            case 6 -> setWeeklyWeightGoal();
-//            case 7 -> trackCalorieIntake();
-//            case 8 -> trackWaterIntake();
-//            case 9 -> updateUserInformation();
+            case 5 -> calculateBodyFatPercentage();
+            case 6 -> setWeeklyWeightGoal();
+            case 7 -> trackCalorieIntake();
+            case 8 -> trackWaterIntake();
+            case 9 -> updateUserInformation();
             case 10 -> {
                 currentSession = null;
                 System.out.println("Signed out successfully.");
@@ -100,6 +100,25 @@ public class UserInterface {
         System.out.println("=== TDEE Calculation ===");
         System.out.printf("Your Total Daily Energy Expenditure (TDEE) is %.2f\n", tdee);
         System.out.println("This is the estimated number of calories you burn per day based on your activity level.");
+        uiHelper.clear();
+    }
+
+    private void calculateBodyFatPercentage() {
+        UserProfile profile = currentSession.getProfile();
+        System.out.println("=== Body Fat Percentage Calculation ===");
+        System.out.print("Enter your waist circumference (cm): ");
+        double waistCM = InputHelper.readDouble();
+        System.out.print("Enter your neck circumference (cm): ");
+        double neckCM = InputHelper.readDouble();
+        double bodyFatPercentage = CalculatorUtil.calculateMaleBodyFatPercentage(profile.getHeightCM(), waistCM, neckCM);
+        if (profile.getGender().equalsIgnoreCase("female")) {
+            System.out.print("Enter your hip circumference (cm): ");
+            double hipCM = InputHelper.readDouble();
+            bodyFatPercentage = CalculatorUtil.calculateFemaleBodyFatPercentage(profile.getHeightCM(), waistCM, hipCM, neckCM);
+        }
+        String bodyFatCategory = CategoryUtil.getBodyFatCategory(bodyFatPercentage, profile.getGender());
+        System.out.printf("Your estimated body fat percentage is %.2f%%\n", bodyFatPercentage);
+        System.out.println("Category: " + bodyFatCategory);
         uiHelper.clear();
     }
 }
