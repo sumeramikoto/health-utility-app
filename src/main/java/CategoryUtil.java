@@ -11,7 +11,7 @@ public class CategoryUtil {
         }
     }
 
-    public String getBodyFatCategory(double bodyFat, String gender) {
+    public static String getBodyFatCategory(double bodyFat, String gender) {
         if (gender.equals("male")) {
             if (bodyFat < 6) return "Essential fat";
             if (bodyFat < 14) return "Athletic";
