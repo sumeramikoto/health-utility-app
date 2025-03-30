@@ -49,16 +49,57 @@ public class UserInterface {
             case 2 -> viewBMI();
             case 3 -> viewBMR();
             case 4 -> viewTDEE();
-            case 5 -> calculateBodyFatPercentage();
-            case 6 -> setWeeklyWeightGoal();
-            case 7 -> trackCalorieIntake();
-            case 8 -> trackWaterIntake();
-            case 9 -> updateUserInformation();
+//            case 5 -> calculateBodyFatPercentage();
+//            case 6 -> setWeeklyWeightGoal();
+//            case 7 -> trackCalorieIntake();
+//            case 8 -> trackWaterIntake();
+//            case 9 -> updateUserInformation();
             case 10 -> {
                 currentSession = null;
                 System.out.println("Signed out successfully.");
             }
             default -> System.out.println("Invalid option. Please try again.");
         }
+    }
+
+    private void viewUserProfile() {
+        UserProfile profile = currentSession.getProfile();
+        System.out.println("=== " + currentSession.getUsername() + "'s Profile ===");
+        System.out.println("Age: " + profile.getAge());
+        System.out.println("Height: " + profile.getHeightM() + " m");
+        System.out.println("Weight: " + profile.getWeightKG() + " kg");
+        System.out.println("Gender: " + profile.getGender());
+        System.out.println("Activity Level: " + ActivityLevel.fromLevel(profile.getActivityLevel()).getDescription());
+        uiHelper.clear();
+    }
+
+    private void viewBMI() {
+        UserProfile profile = currentSession.getProfile();
+        double bmi = CalculatorUtil.calculateBMI(profile.getWeightKG(), profile.getHeightM());
+        String bmiCategory = CategoryUtil.getBMICategory(bmi);
+        System.out.println("=== BMI Calculation ===");
+        System.out.printf("Your BMI is %.2f\n", bmi);
+        System.out.println("Category: " + bmiCategory);
+        uiHelper.clear();
+    }
+
+    private void viewBMR() {
+        UserProfile profile = currentSession.getProfile();
+        double bmr = CalculatorUtil.calculateBMR(profile.getGender(), profile.getWeightKG(), profile.getHeightCM(), profile.getAge());
+        System.out.println("=== BMR Calculation ===");
+        System.out.printf("Your Basal Metabolic Rate (BMR) is %.2f\n", bmr);
+        System.out.println("This is the number of calories your body needs to maintain basic functions at rest.");
+        uiHelper.clear();
+    }
+
+    private void viewTDEE() {
+        UserProfile profile = currentSession.getProfile();
+        double bmr = CalculatorUtil.calculateBMR(profile.getGender(), profile.getWeightKG(), profile.getHeightCM(), profile.getAge());
+        double activityLevelMultiplier = ActivityLevel.fromLevel(profile.getActivityLevel()).getMultiplier();
+        double tdee = CalculatorUtil.calculateTDEE(bmr, activityLevelMultiplier);
+        System.out.println("=== TDEE Calculation ===");
+        System.out.printf("Your Total Daily Energy Expenditure (TDEE) is %.2f\n", tdee);
+        System.out.println("This is the estimated number of calories you burn per day based on your activity level.");
+        uiHelper.clear();
     }
 }
