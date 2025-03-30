@@ -1,4 +1,4 @@
-abstract class UserProfile {
+class UserProfile {
     private int age;
     private double heightM;
     private double weightKG;
