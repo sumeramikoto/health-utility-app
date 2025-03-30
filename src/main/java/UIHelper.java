@@ -1,0 +1,77 @@
+import java.io.IOException;
+
+public class UIHelper {
+    private final AuthService authService;
+
+    public UIHelper(AuthService authService) {
+        this.authService = authService;
+    }
+
+    public UserSession login() {
+        System.out.print("Enter Your Username: ");
+        String username = InputHelper.readLine();
+        System.out.print("Enter Password: ");
+        String password = InputHelper.readLine();
+        try {
+            UserCredentials credentials = authService.authenticate(username, password);
+            if (credentials != null) {
+                UserProfile profile = authService.getUserProfile(username);
+                UserSession currentSession = new UserSession(credentials, profile);
+                System.out.println("Login successful!");
+                return currentSession;
+            } else {
+                System.out.println("Invalid username or password.");
+            }
+        } catch (IOException e) {
+            System.out.println("Error during login: " + e.getMessage());
+        }
+        return login();
+    }
+
+    public UserSession register() {
+        System.out.print("Username: ");
+        String username = InputHelper.readLine();
+        System.out.print("Password: ");
+        String password = InputHelper.readLine();
+
+        System.out.println("\nLet's set up your profile:");
+        System.out.print("Age: ");
+        int age = InputHelper.readInt();
+        System.out.print("Height (M): ");
+        double height = InputHelper.readDouble();
+        System.out.print("Weight (KG): ");
+        double weight = InputHelper.readDouble();
+
+        System.out.print("Gender (Male/Female): ");
+        String gender = InputHelper.readLine().toLowerCase();
+        while (!gender.equals("male") && !gender.equals("female")) {
+            System.out.print("Please enter either 'Male' or 'Female': ");
+            gender = InputHelper.readLine().toLowerCase();
+        }
+
+        MenuDisplays.displayActivityLevelMenu();
+        int activityLevel = InputHelper.readInt();
+        while (activityLevel < 1 || activityLevel > ActivityLevel.values().length) {
+            System.out.print("Please enter a number between 1 and " + ActivityLevel.values().length + ": ");
+            activityLevel = InputHelper.readInt();
+        }
+
+        UserProfile profile = new UserProfile(age, height, weight, gender, activityLevel);
+        UserCredentials credentials = new UserCredentials(username, password);
+
+        try {
+            boolean success = authService.registerUser(credentials, profile);
+            if (success) {
+                UserSession currentSession = new UserSession(credentials, profile);
+                System.out.println("Registration successful!");
+                return currentSession;
+            } else {
+                System.out.println("Username already exists. Please try another one.");
+            }
+        } catch (IOException e) {
+            System.out.println("Error during registration: " + e.getMessage());
+        }
+        return register();
+    }
+
+}
