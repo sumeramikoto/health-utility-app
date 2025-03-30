@@ -35,13 +35,4 @@ public enum ActivityLevel {
         }
         throw new IllegalArgumentException("Invalid activity level: " + level);
     }
-
-    public static String[] getDescriptions() {
-        ActivityLevel[] levels = values();
-        String[] descriptions = new String[levels.length];
-        for (int i = 0; i < levels.length; i++) {
-            descriptions[i] = (i + 1) + ". " + levels[i].getDescription();
-        }
-        return descriptions;
-    }
 }
