@@ -4,9 +4,11 @@ import java.time.format.DateTimeFormatter;
 public class UserInterface {
     private final UIHelper uiHelper;
     private UserSession currentSession;
+    private final WeightGoalManager goalManager;
 
-    public UserInterface(UIHelper uiHelper) {
-        this.uiHelper = uiHelper;
+    public UserInterface() {
+        this.uiHelper = new UIHelper();
+        this.goalManager = new WeightGoalManager();
     }
 
     public void start() {
@@ -21,7 +23,7 @@ public class UserInterface {
     }
 
     private boolean displayAuthMenu() {
-        MenuDisplays.displayAuthMenu();
+        OutputHelper.displayAuthMenu();
         int choice = InputHelper.readInt();
         switch (choice) {
             case 1:
@@ -42,7 +44,7 @@ public class UserInterface {
     private void displayMainMenu() {
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String mainMenuTitle = "Welcome " + currentSession.getUsername() + "!                             Date: " + today;
-        MenuDisplays.displayMainMenu(mainMenuTitle);
+        OutputHelper.displayMainMenu(mainMenuTitle);
         int choice = InputHelper.readInt();
         switch (choice) {
             case 1 -> viewUserProfile();
@@ -51,9 +53,9 @@ public class UserInterface {
             case 4 -> viewTDEE();
             case 5 -> calculateBodyFatPercentage();
             case 6 -> setWeeklyWeightGoal();
-            case 7 -> trackCalorieIntake();
-            case 8 -> trackWaterIntake();
-            case 9 -> updateUserInformation();
+//            case 7 -> trackCalorieIntake();
+//            case 8 -> trackWaterIntake();
+//            case 9 -> updateUserInformation();
             case 10 -> {
                 currentSession = null;
                 System.out.println("Signed out successfully.");
@@ -77,18 +79,14 @@ public class UserInterface {
         UserProfile profile = currentSession.getProfile();
         double bmi = CalculatorUtil.calculateBMI(profile.getWeightKG(), profile.getHeightM());
         String bmiCategory = CategoryUtil.getBMICategory(bmi);
-        System.out.println("=== BMI Calculation ===");
-        System.out.printf("Your BMI is %.2f\n", bmi);
-        System.out.println("Category: " + bmiCategory);
+        OutputHelper.displayBMIResult(bmi, bmiCategory);
         uiHelper.clear();
     }
 
     private void viewBMR() {
         UserProfile profile = currentSession.getProfile();
         double bmr = CalculatorUtil.calculateBMR(profile.getGender(), profile.getWeightKG(), profile.getHeightCM(), profile.getAge());
-        System.out.println("=== BMR Calculation ===");
-        System.out.printf("Your Basal Metabolic Rate (BMR) is %.2f\n", bmr);
-        System.out.println("This is the number of calories your body needs to maintain basic functions at rest.");
+        OutputHelper.displayBMRResult(bmr);
         uiHelper.clear();
     }
 
@@ -97,15 +95,12 @@ public class UserInterface {
         double bmr = CalculatorUtil.calculateBMR(profile.getGender(), profile.getWeightKG(), profile.getHeightCM(), profile.getAge());
         double activityLevelMultiplier = ActivityLevel.fromLevel(profile.getActivityLevel()).getMultiplier();
         double tdee = CalculatorUtil.calculateTDEE(bmr, activityLevelMultiplier);
-        System.out.println("=== TDEE Calculation ===");
-        System.out.printf("Your Total Daily Energy Expenditure (TDEE) is %.2f\n", tdee);
-        System.out.println("This is the estimated number of calories you burn per day based on your activity level.");
+        OutputHelper.displayTDEEResult(tdee);
         uiHelper.clear();
     }
 
     private void calculateBodyFatPercentage() {
         UserProfile profile = currentSession.getProfile();
-        System.out.println("=== Body Fat Percentage Calculation ===");
         System.out.print("Enter your waist circumference (cm): ");
         double waistCM = InputHelper.readDouble();
         System.out.print("Enter your neck circumference (cm): ");
@@ -117,8 +112,28 @@ public class UserInterface {
             bodyFatPercentage = CalculatorUtil.calculateFemaleBodyFatPercentage(profile.getHeightCM(), waistCM, hipCM, neckCM);
         }
         String bodyFatCategory = CategoryUtil.getBodyFatCategory(bodyFatPercentage, profile.getGender());
-        System.out.printf("Your estimated body fat percentage is %.2f%%\n", bodyFatPercentage);
-        System.out.println("Category: " + bodyFatCategory);
+        OutputHelper.displayBodyFatPercentageResult(bodyFatPercentage, bodyFatCategory);
         uiHelper.clear();
     }
+
+    private void setWeeklyWeightGoal() {
+        UserProfile profile = currentSession.getProfile();
+        OutputHelper.displayWeightGoalMenu();
+        int goalChoice = InputHelper.getInt1or2();
+        String goalType = (goalChoice == 1) ? "gain" : "loss";
+        OutputHelper.displayWeightGoalPaceMenu();
+        int paceChoice = InputHelper.getInt1or2();
+        double rate = (paceChoice == 1) ? 0.5 : 1;
+        double bmr = CalculatorUtil.calculateBMR(profile.getGender(), profile.getWeightKG(), profile.getHeightCM(), profile.getAge());
+        double activityLevelMultiplier = ActivityLevel.fromLevel(profile.getActivityLevel()).getMultiplier();
+        double tdee = CalculatorUtil.calculateTDEE(bmr, activityLevelMultiplier);
+        double calorieAdjustment = rate * 1000;
+        double targetCalories = (goalType.equalsIgnoreCase("gain")) ? tdee + calorieAdjustment : tdee - calorieAdjustment;
+        WeightGoal goal = new WeightGoal(currentSession.getUsername(), goalType, rate, targetCalories);
+        OutputHelper.displayWeightGoalResult(goalType, rate, targetCalories);
+        goalManager.saveGoal(goal);
+        uiHelper.clear();
+    }
+
+
 }
