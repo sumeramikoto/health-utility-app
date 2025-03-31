@@ -55,7 +55,7 @@ public class UserInterface {
             case 6 -> setWeeklyWeightGoal();
 //            case 7 -> trackCalorieIntake();
 //            case 8 -> trackWaterIntake();
-//            case 9 -> updateUserInformation();
+            case 9 -> updateUserInformation();
             case 10 -> {
                 currentSession = null;
                 System.out.println("Signed out successfully.");
@@ -135,5 +135,9 @@ public class UserInterface {
         uiHelper.clear();
     }
 
-
+    private void updateUserInformation() {
+        System.out.println("\n*** Enter new information (press Enter to keep current value) ***");
+        uiHelper.updateUserProfile(currentSession);
+        uiHelper.clear();
+    }
 }

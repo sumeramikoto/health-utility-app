@@ -84,4 +84,43 @@ public class UIHelper {
             e.printStackTrace();
         }
     }
+
+    public void updateUserProfile(UserSession session) {
+        UserProfile profile = session.getProfile();
+        System.out.print("Age [" + profile.getAge() + "]: ");
+        String ageInput = InputHelper.readLine();
+        int age = ageInput.isEmpty() ? profile.getAge() : Integer.parseInt(ageInput);
+
+        System.out.print("Height (m) [" + profile.getHeightM() + "]: ");
+        String heightInput = InputHelper.readLine();
+        double height = heightInput.isEmpty() ? profile.getHeightM() : Double.parseDouble(heightInput);
+
+        System.out.print("Weight (kg) [" + profile.getWeightKG() + "]: ");
+        String weightInput = InputHelper.readLine();
+        double weight = weightInput.isEmpty() ? profile.getWeightKG() : Double.parseDouble(weightInput);
+
+        System.out.println("Current Activity Level: " + ActivityLevel.fromLevel(profile.getActivityLevel()).getDescription());
+        OutputHelper.displayActivityLevelMenu();
+        String activityLevelInput = InputHelper.readLine();
+        int activityLevel = activityLevelInput.isEmpty() ? profile.getActivityLevel() : Integer.parseInt(activityLevelInput);
+        if (activityLevel < 1 || activityLevel > 5) {
+            System.out.print("Invalid input. Please try again: ");
+            activityLevel = InputHelper.getActivityLevelInput();
+        }
+        profile.updateProfile(age, height, weight, activityLevel);
+        updateUserInformationInFile(session.getUsername(), profile);
+    }
+
+    private void updateUserInformationInFile(String username, UserProfile profile) {
+        try {
+            boolean success = authService.updateUserProfile(username, profile);
+            if (success) {
+                System.out.println("Profile updated successfully!");
+            } else {
+                System.out.println("Failed to update profile.");
+            }
+        } catch (IOException e) {
+            System.out.println("Error updating profile: " + e.getMessage());
+        }
+    }
 }

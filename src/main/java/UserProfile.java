@@ -37,10 +37,6 @@ public class UserProfile {
         return activityLevel;
     }
 
-    public void setActivityLevel(int activityLevel) {
-        this.activityLevel = activityLevel;
-    }
-
     public void updateProfile(int age, double heightM, double weightKG, int activityLevel) {
         this.age = age;
         this.heightM = heightM;

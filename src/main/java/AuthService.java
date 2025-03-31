@@ -99,27 +99,29 @@ public class AuthService {
         return null;
     }
 
-    private void writeProfileLinesToFile(List<String> profiles) throws IOException {
+    public boolean updateUserProfile(String username, UserProfile profile) throws IOException {
+        List<String> profiles = new ArrayList<>();
+        boolean found = isProfileFound(username, profile, profiles);
+        if (!found) {
+            return false;
+        }
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(PROFILES_CSV))) {
             for (String profile_line : profiles) {
                 writer.write(profile_line);
                 writer.newLine();
             }
         }
+        return true;
     }
 
-    private boolean findAndUpdateUserProfile(String username, UserProfile profile, List<String> profiles) throws IOException {
+    private boolean isProfileFound(String username, UserProfile profile, List<String> profiles) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(PROFILES_CSV))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 if ((parts.length >= 5) && parts[0].equals(username)) {
-                    profiles.add(username + "," +
-                            profile.getAge() + "," +
-                            profile.getHeightM() + "," +
-                            profile.getWeightKG() + "," +
-                            profile.getGender() + "," +
-                            profile.getActivityLevel());
+                    profiles.add(username + "," + profile.getAge() + "," + profile.getHeightM() + "," + profile.getWeightKG() + "," + profile.getGender() + "," + profile.getActivityLevel());
                     return true;
                 } else {
                     profiles.add(line);
