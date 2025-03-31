@@ -3,8 +3,8 @@ import java.io.IOException;
 public class UIHelper {
     private final AuthService authService;
 
-    public UIHelper(AuthService authService) {
-        this.authService = authService;
+    public UIHelper() {
+        this.authService = new AuthService();
     }
 
     public UserSession login() {
@@ -43,18 +43,10 @@ public class UIHelper {
         double weight = InputHelper.readDouble();
 
         System.out.print("Gender (Male/Female): ");
-        String gender = InputHelper.readLine().toLowerCase();
-        while (!gender.equals("male") && !gender.equals("female")) {
-            System.out.print("Please enter either 'Male' or 'Female': ");
-            gender = InputHelper.readLine().toLowerCase();
-        }
+        String gender = InputHelper.getGenderInput();
 
-        MenuDisplays.displayActivityLevelMenu();
-        int activityLevel = InputHelper.readInt();
-        while (activityLevel < 1 || activityLevel > ActivityLevel.values().length) {
-            System.out.print("Please enter a number between 1 and " + ActivityLevel.values().length + ": ");
-            activityLevel = InputHelper.readInt();
-        }
+        OutputHelper.displayActivityLevelMenu();
+        int activityLevel = InputHelper.getActivityLevelInput();
 
         UserProfile profile = new UserProfile(age, height, weight, gender, activityLevel);
         UserCredentials credentials = new UserCredentials(username, password);
