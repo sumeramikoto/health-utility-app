@@ -29,6 +29,15 @@ public class InputHelper {
         }
     }
 
+    public static String getGenderInput() {
+        String gender = InputHelper.readLine().toLowerCase();
+        while (!gender.equals("male") && !gender.equals("female")) {
+            System.out.print("Please enter either 'Male' or 'Female': ");
+            gender = InputHelper.readLine().toLowerCase();
+        }
+        return gender;
+    }
+
     public static int getInt1or2() {
         int choice = InputHelper.readInt();
         while (choice < 1 || choice > 2) {
@@ -36,5 +45,14 @@ public class InputHelper {
             choice = InputHelper.readInt();
         }
         return choice;
+    }
+
+    public static int getActivityLevelInput() {
+        int activityLevel = InputHelper.readInt();
+        while (activityLevel < 1 || activityLevel > ActivityLevel.values().length) {
+            System.out.print("Please enter a number between 1 and " + ActivityLevel.values().length + ": ");
+            activityLevel = InputHelper.readInt();
+        }
+        return activityLevel;
     }
 }
