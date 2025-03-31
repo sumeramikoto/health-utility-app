@@ -103,7 +103,7 @@ public class UIHelper {
         OutputHelper.displayActivityLevelMenu();
         String activityLevelInput = InputHelper.readLine();
         int activityLevel = activityLevelInput.isEmpty() ? profile.getActivityLevel() : Integer.parseInt(activityLevelInput);
-        if (activityLevel < 1 || activityLevel > 5) {
+        if (activityLevel < 1 || activityLevel > ActivityLevel.values().length) {
             System.out.print("Invalid input. Please try again: ");
             activityLevel = InputHelper.getActivityLevelInput();
         }
