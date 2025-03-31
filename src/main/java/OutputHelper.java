@@ -72,6 +72,6 @@ public class OutputHelper {
     public static void displayWeightGoalResult(String goalType, double rate, double targetCalories) {
         System.out.println("Your weekly weight goal has been set!");
         System.out.println("Your goal is to " + goalType + " weight by " + rate + " kg/week");
-        System.out.printf("Target calories: %.2f calories/day\n", targetCalories);
+        System.out.printf("Your target calories for this week will be %.2f calories/day\n", targetCalories);
     }
 }
