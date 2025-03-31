@@ -28,4 +28,13 @@ public class InputHelper {
             }
         }
     }
+
+    public static int getInt1or2() {
+        int choice = InputHelper.readInt();
+        while (choice < 1 || choice > 2) {
+            System.out.print("Please enter either 1 or 2: ");
+            choice = InputHelper.readInt();
+        }
+        return choice;
+    }
 }
