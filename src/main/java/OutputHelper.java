@@ -1,4 +1,4 @@
-public class MenuDisplays {
+public class OutputHelper {
     public static void displayAuthMenu() {
         System.out.println("1. Login");
         System.out.println("2. Register");
@@ -41,5 +41,37 @@ public class MenuDisplays {
         System.out.println("=== BMR Calculation ===");
         System.out.printf("Your Basal Metabolic Rate (BMR) is %.2f\n", bmr);
         System.out.println("This is the number of calories your body needs to maintain basic functions at rest.");
+    }
+
+    public static void displayTDEEResult(double tdee) {
+        System.out.println("=== TDEE Calculation ===");
+        System.out.printf("Your Total Daily Energy Expenditure (TDEE) is %.2f\n", tdee);
+        System.out.println("This is the estimated number of calories you burn per day based on your activity level.");
+    }
+
+    public static void displayBodyFatPercentageResult(double bodyFatPercentage, String bodyFatCategory) {
+        System.out.println("=== Body Fat Percentage Calculation ===");
+        System.out.printf("Your estimated body fat percentage is %.2f%%\n", bodyFatPercentage);
+        System.out.println("Category: " + bodyFatCategory);
+    }
+
+    public static void displayWeightGoalMenu() {
+        System.out.println("=== Weekly Weight Goal ===");
+        System.out.println("1. Gain Weight");
+        System.out.println("2. Lose Weight");
+        System.out.print("Enter your desired goal: ");
+    }
+
+    public static void displayWeightGoalPaceMenu() {
+        System.out.println("*** Preferred Pace ***");
+        System.out.println("1. Steady (0.5 kg/week)");
+        System.out.println("2. Accelerated (1 kg/week)");
+        System.out.print("Enter your desired pace: ");
+    }
+
+    public static void displayWeightGoalResult(String goalType, double rate, double targetCalories) {
+        System.out.println("Your weekly weight goal has been set!");
+        System.out.println("Your goal is to " + goalType + " weight by " + rate + " kg/week");
+        System.out.printf("Target calories: %.2f calories/day\n", targetCalories);
     }
 }
