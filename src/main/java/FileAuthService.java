@@ -5,17 +5,9 @@ import java.util.*;
 public class AuthService {
     private final String USERS_CSV = "users.csv";
     private final String PROFILES_CSV = "profiles.csv";
-    private static AuthService instance;
 
-    private AuthService() {
+    public AuthService() {
         initializeFiles();
-    }
-
-    public static AuthService getInstance() {
-        if (instance == null) {
-            instance = new AuthService();
-        }
-        return instance;
     }
 
     private void initializeFiles() {

@@ -5,17 +5,9 @@ import java.util.Map;
 
 public class CalorieTracker {
     private final String CALORIE_INTAKE_CSV = "calorie_intake.csv";
-    private static CalorieTracker instance;
 
-    private CalorieTracker() {
+    public CalorieTracker() {
         initializeFile();
-    }
-
-    public static CalorieTracker getInstance() {
-        if (instance == null) {
-            instance = new CalorieTracker();
-        }
-        return instance;
     }
 
     private void initializeFile() {
