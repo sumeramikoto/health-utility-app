@@ -1,12 +1,11 @@
-// File: AuthService.java
 import java.io.*;
 import java.util.*;
 
-public class AuthService {
+public class FileAuthService implements IAuthService {
     private final String USERS_CSV = "users.csv";
     private final String PROFILES_CSV = "profiles.csv";
 
-    public AuthService() {
+    public FileAuthService() {
         initializeFiles();
     }
 
@@ -26,6 +25,7 @@ public class AuthService {
         }
     }
 
+    @Override
     public UserCredentials authenticate(String username, String password) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(USERS_CSV))) {
             String line;
@@ -39,6 +39,7 @@ public class AuthService {
         return null;
     }
 
+    @Override
     public boolean registerUser(UserCredentials user, UserProfile profile) throws IOException {
         if (usernameAlreadyExists(user)) {
             return false;
@@ -81,6 +82,7 @@ public class AuthService {
         return false;
     }
 
+    @Override
     public UserProfile getUserProfile(String username) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(PROFILES_CSV))) {
             String line;
@@ -99,6 +101,7 @@ public class AuthService {
         return null;
     }
 
+    @Override
     public boolean updateUserProfile(String username, UserProfile profile) throws IOException {
         List<String> profiles = new ArrayList<>();
         boolean found = isProfileFound(username, profile, profiles);

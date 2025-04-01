@@ -3,11 +3,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WaterTracker {
+public class FileWaterTracker implements IWaterTracker {
     private final String WATER_INTAKE_CSV = "water_intake.csv";
     private final double STANDARD_WATER_RECOMMENDATION_ML_PER_KG = 35;
 
-    public WaterTracker() {
+    public FileWaterTracker() {
         initializeFile();
     }
 
@@ -22,6 +22,7 @@ public class WaterTracker {
         }
     }
 
+    @Override
     public void addWaterIntake(String username, LocalDate date, double amount) {
         String dateStr = date.toString();
         double currentIntake = getWaterIntake(username, date);
@@ -67,6 +68,7 @@ public class WaterTracker {
         }
     }
 
+    @Override
     public double getWaterIntake(String username, LocalDate date) {
         String dateStr = date.toString();
         try (BufferedReader reader = new BufferedReader(new FileReader(WATER_INTAKE_CSV))) {
@@ -83,6 +85,7 @@ public class WaterTracker {
         return 0.0;
     }
 
+    @Override
     public double getRecommendedIntake(UserProfile profile) {
         double weightInKg = profile.getWeightKG();
         return weightInKg * STANDARD_WATER_RECOMMENDATION_ML_PER_KG;

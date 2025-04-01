@@ -2,10 +2,10 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WeightGoalManager {
+public class FileWeightGoalManager implements IWeightGoalManager {
     private final String GOALS_CSV = "goals.csv";
 
-    public WeightGoalManager() {
+    public FileWeightGoalManager() {
         initializeFile();
     }
 

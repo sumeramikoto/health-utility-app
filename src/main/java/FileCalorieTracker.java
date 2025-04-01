@@ -3,10 +3,10 @@ import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class CalorieTracker {
+public class FileCalorieTracker implements ICalorieTracker {
     private final String CALORIE_INTAKE_CSV = "calorie_intake.csv";
 
-    public CalorieTracker() {
+    public FileCalorieTracker() {
         initializeFile();
     }
 
@@ -21,6 +21,7 @@ public class CalorieTracker {
         }
     }
 
+    @Override
     public void addCalorieIntake(String username, LocalDate date, String foodItem, double calories) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(CALORIE_INTAKE_CSV, true))) {
             writer.write(username + "," + date.toString() + "," + foodItem + "," + calories);
@@ -30,6 +31,7 @@ public class CalorieTracker {
         }
     }
 
+    @Override
     public Map<String, Double> getDailyCalorieIntake(String username, LocalDate date) {
         Map<String, Double> foodEntries = new LinkedHashMap<>();
         String dateStr = date.toString();
@@ -51,6 +53,7 @@ public class CalorieTracker {
         return foodEntries;
     }
 
+    @Override
     public double getTotalCaloriesForDay(String username, LocalDate date) {
         Map<String, Double> entries = getDailyCalorieIntake(username, date);
         double total = 0;
