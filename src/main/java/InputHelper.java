@@ -38,9 +38,9 @@ public class InputHelper {
         return gender;
     }
 
-    public static int getInt1or2() {
+    public static int getIntInRange(int low, int high) {
         int choice = InputHelper.readInt();
-        while (choice < 1 || choice > 2) {
+        while (choice < low || choice > high) {
             System.out.print("Please enter either 1 or 2: ");
             choice = InputHelper.readInt();
         }
