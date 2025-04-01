@@ -1,9 +1,9 @@
 import java.io.IOException;
 
-public class UIHelper {
+public class UserManager {
     private final AuthService authService;
 
-    public UIHelper() {
+    public UserManager() {
         this.authService = new AuthService();
     }
 
@@ -64,25 +64,6 @@ public class UIHelper {
             System.out.println("Error during registration: " + e.getMessage());
         }
         return register();
-    }
-
-    public void clear() {
-        System.out.println("\n\nPress Enter to continue...");
-        InputHelper.readLine();
-        clearConsole();
-    }
-
-    private void clearConsole(){
-        try {
-            if (System.getProperty("os.name").contains("Windows")) {
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            } else {
-                System.out.print("\033[H\033[2J");
-                System.out.flush();
-            }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     public void updateUserProfile(UserSession session) {
