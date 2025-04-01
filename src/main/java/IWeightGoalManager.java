@@ -1,4 +1,4 @@
 public interface IWeightGoalManager {
-    public void saveGoal(WeightGoal goal);
-    public WeightGoal getGoalForUser(String username);
+    void saveGoal(WeightGoal goal);
+    WeightGoal getGoalForUser(String username);
 }
