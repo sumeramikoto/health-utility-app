@@ -122,11 +122,13 @@ public class UserInterface {
         double waistCM = InputHelper.readDouble();
         System.out.print("Enter your neck circumference (cm): ");
         double neckCM = InputHelper.readDouble();
-        double bodyFatPercentage = CalculatorUtil.calculateMaleBodyFatPercentage(profile.getHeightCM(), waistCM, neckCM);
+        double bodyFatPercentage = 0;
         if (profile.getGender().equalsIgnoreCase("female")) {
             System.out.print("Enter your hip circumference (cm): ");
             double hipCM = InputHelper.readDouble();
             bodyFatPercentage = CalculatorUtil.calculateFemaleBodyFatPercentage(profile.getHeightCM(), waistCM, hipCM, neckCM);
+        } else {
+            bodyFatPercentage = CalculatorUtil.calculateMaleBodyFatPercentage(profile.getHeightCM(), waistCM,neckCM);
         }
         String bodyFatCategory = CategoryUtil.getBodyFatCategory(bodyFatPercentage, profile.getGender());
         OutputHelper.displayBodyFatPercentageResult(bodyFatPercentage, bodyFatCategory);
