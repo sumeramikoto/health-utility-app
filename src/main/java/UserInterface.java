@@ -11,13 +11,14 @@ public class UserInterface {
     private final WaterTracker waterTracker;
 
     public UserInterface() {
-        this.userManager = new UserManager();
-        this.goalManager = new WeightGoalManager();
-        this.calorieTracker = new CalorieTracker();
-        this.waterTracker = new WaterTracker();
+        this.userManager = UserManager.getInstance();
+        this.goalManager = WeightGoalManager.getInstance();
+        this.calorieTracker = CalorieTracker.getInstance();
+        this.waterTracker = WaterTracker.getInstance();
     }
 
     public void start() {
+        System.out.println("Welcome to the app!\n");
         boolean running = true;
         while (running) {
             if (currentSession == null) {
@@ -33,9 +34,11 @@ public class UserInterface {
         int choice = InputHelper.readInt();
         switch (choice) {
             case 1:
+                clearConsole();
                 currentSession = userManager.login();
                 return true;
             case 2:
+                clearConsole();
                 currentSession = userManager.register();
                 return true;
             case 3:
@@ -74,6 +77,7 @@ public class UserInterface {
     }
 
     private void viewUserProfile() {
+        clearConsole();
         UserProfile profile = currentSession.getProfile();
         System.out.println("=== " + currentSession.getUsername() + "'s Profile ===");
         System.out.println("Age: " + profile.getAge());
@@ -85,6 +89,7 @@ public class UserInterface {
     }
 
     private void viewBMI() {
+        clearConsole();
         UserProfile profile = currentSession.getProfile();
         double bmi = CalculatorUtil.calculateBMI(profile.getWeightKG(), profile.getHeightM());
         String bmiCategory = CategoryUtil.getBMICategory(bmi);
@@ -93,6 +98,7 @@ public class UserInterface {
     }
 
     private void viewBMR() {
+        clearConsole();
         UserProfile profile = currentSession.getProfile();
         double bmr = CalculatorUtil.calculateBMR(profile.getGender(), profile.getWeightKG(), profile.getHeightCM(), profile.getAge());
         OutputHelper.displayBMRResult(bmr);
@@ -100,6 +106,7 @@ public class UserInterface {
     }
 
     private void viewTDEE() {
+        clearConsole();
         UserProfile profile = currentSession.getProfile();
         double bmr = CalculatorUtil.calculateBMR(profile.getGender(), profile.getWeightKG(), profile.getHeightCM(), profile.getAge());
         double activityLevelMultiplier = ActivityLevel.fromLevel(profile.getActivityLevel()).getMultiplier();
@@ -109,6 +116,7 @@ public class UserInterface {
     }
 
     private void calculateBodyFatPercentage() {
+        clearConsole();
         UserProfile profile = currentSession.getProfile();
         System.out.print("Enter your waist circumference (cm): ");
         double waistCM = InputHelper.readDouble();
@@ -126,6 +134,7 @@ public class UserInterface {
     }
 
     private void setWeeklyWeightGoal() {
+        clearConsole();
         UserProfile profile = currentSession.getProfile();
         OutputHelper.displayWeightGoalMenu();
         int goalChoice = InputHelper.getInt1or2();
@@ -145,12 +154,14 @@ public class UserInterface {
     }
 
     private void updateUserInformation() {
+        clearConsole();
         System.out.println("\n*** Enter new information (press Enter to keep current value) ***");
         userManager.updateUserProfile(currentSession);
         clear();
     }
 
     private void trackCalorieIntake() {
+        clearConsole();
         LocalDate today = LocalDate.now();
         WeightGoal goal = goalManager.getGoalForUser(currentSession.getUsername());
         if (goal == null) {
@@ -181,6 +192,7 @@ public class UserInterface {
     }
 
     private void trackWaterIntake() {
+        clearConsole();
         UserProfile profile = currentSession.getProfile();
         LocalDate today = LocalDate.now();
         double currentIntake = waterTracker.getWaterIntake(currentSession.getUsername(), today);
