@@ -4,15 +4,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 public class UserInterface {
-    private final UserManager userManager;
     private UserSession currentSession;
+    private final UserManager userManager;
     private final WeightGoalManager goalManager;
     private final CalorieTracker calorieTracker;
+    private final WaterTracker waterTracker;
 
     public UserInterface() {
         this.userManager = new UserManager();
         this.goalManager = new WeightGoalManager();
         this.calorieTracker = new CalorieTracker();
+        this.waterTracker = new WaterTracker();
     }
 
     public void start() {
@@ -58,7 +60,7 @@ public class UserInterface {
             case 5 -> calculateBodyFatPercentage();
             case 6 -> setWeeklyWeightGoal();
             case 7 -> trackCalorieIntake();
-//            case 8 -> trackWaterIntake();
+            case 8 -> trackWaterIntake();
             case 9 -> updateUserInformation();
             case 10 -> signOut();
             default -> System.out.println("Invalid option. Please try again.");
@@ -162,7 +164,7 @@ public class UserInterface {
         Map<String, Double> foodEntries = calorieTracker.getDailyCalorieIntake(currentSession.getUsername(), today);
         if (!foodEntries.isEmpty()) OutputHelper.displayFoodLog(foodEntries);
         OutputHelper.displayFoodItemOptions();
-        int option = InputHelper.readInt();
+        int option = InputHelper.getInt1or2();
         if (option == 1) addFoodItem(today, goal);
         clear();
     }
@@ -178,7 +180,25 @@ public class UserInterface {
         OutputHelper.displayCalorieIntakeUpdatedInfo(foodItem, calories, newTotal, goal.getTargetCalories());
     }
 
+    private void trackWaterIntake() {
+        UserProfile profile = currentSession.getProfile();
+        LocalDate today = LocalDate.now();
+        double currentIntake = waterTracker.getWaterIntake(currentSession.getUsername(), today);
+        double recommendedIntake = waterTracker.getRecommendedIntake(profile);
+        OutputHelper.displayWaterIntakeInfo(today, recommendedIntake, currentIntake);
+        OutputHelper.displayWaterIntakeOptions();
+        int option = InputHelper.getInt1or2();
+        if (option == 1) addWaterIntake(today, recommendedIntake);
+        clear();
+    }
 
+    private void addWaterIntake(LocalDate date, double recommendedIntake) {
+        System.out.print("Enter amount of water (ml): ");
+        double amount = InputHelper.readDouble();
+        waterTracker.addWaterIntake(currentSession.getUsername(), date, amount);
+        double newCurrentIntake = waterTracker.getWaterIntake(currentSession.getUsername(), date);
+        OutputHelper.displayWaterIntakeUpdatedInfo(newCurrentIntake, recommendedIntake);
+    }
 
     public void clear() {
         System.out.println("\n\nPress Enter to continue...");
