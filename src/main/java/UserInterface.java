@@ -1,14 +1,18 @@
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 public class UserInterface {
-    private final UIHelper uiHelper;
+    private final UserManager userManager;
     private UserSession currentSession;
     private final WeightGoalManager goalManager;
+    private final CalorieTracker calorieTracker;
 
     public UserInterface() {
-        this.uiHelper = new UIHelper();
+        this.userManager = new UserManager();
         this.goalManager = new WeightGoalManager();
+        this.calorieTracker = new CalorieTracker();
     }
 
     public void start() {
@@ -27,10 +31,10 @@ public class UserInterface {
         int choice = InputHelper.readInt();
         switch (choice) {
             case 1:
-                currentSession = uiHelper.login();
+                currentSession = userManager.login();
                 return true;
             case 2:
-                currentSession = uiHelper.register();
+                currentSession = userManager.register();
                 return true;
             case 3:
                 System.out.println("Goodbye!");
@@ -53,15 +57,18 @@ public class UserInterface {
             case 4 -> viewTDEE();
             case 5 -> calculateBodyFatPercentage();
             case 6 -> setWeeklyWeightGoal();
-//            case 7 -> trackCalorieIntake();
+            case 7 -> trackCalorieIntake();
 //            case 8 -> trackWaterIntake();
             case 9 -> updateUserInformation();
-            case 10 -> {
-                currentSession = null;
-                System.out.println("Signed out successfully.");
-            }
+            case 10 -> signOut();
             default -> System.out.println("Invalid option. Please try again.");
         }
+    }
+
+    private void signOut() {
+        currentSession = null;
+        clearConsole();
+        System.out.println("Signed out successfully.");
     }
 
     private void viewUserProfile() {
@@ -72,7 +79,7 @@ public class UserInterface {
         System.out.println("Weight: " + profile.getWeightKG() + " kg");
         System.out.println("Gender: " + profile.getGender());
         System.out.println("Activity Level: " + ActivityLevel.fromLevel(profile.getActivityLevel()).getDescription());
-        uiHelper.clear();
+        clear();
     }
 
     private void viewBMI() {
@@ -80,14 +87,14 @@ public class UserInterface {
         double bmi = CalculatorUtil.calculateBMI(profile.getWeightKG(), profile.getHeightM());
         String bmiCategory = CategoryUtil.getBMICategory(bmi);
         OutputHelper.displayBMIResult(bmi, bmiCategory);
-        uiHelper.clear();
+        clear();
     }
 
     private void viewBMR() {
         UserProfile profile = currentSession.getProfile();
         double bmr = CalculatorUtil.calculateBMR(profile.getGender(), profile.getWeightKG(), profile.getHeightCM(), profile.getAge());
         OutputHelper.displayBMRResult(bmr);
-        uiHelper.clear();
+        clear();
     }
 
     private void viewTDEE() {
@@ -96,7 +103,7 @@ public class UserInterface {
         double activityLevelMultiplier = ActivityLevel.fromLevel(profile.getActivityLevel()).getMultiplier();
         double tdee = CalculatorUtil.calculateTDEE(bmr, activityLevelMultiplier);
         OutputHelper.displayTDEEResult(tdee);
-        uiHelper.clear();
+        clear();
     }
 
     private void calculateBodyFatPercentage() {
@@ -113,7 +120,7 @@ public class UserInterface {
         }
         String bodyFatCategory = CategoryUtil.getBodyFatCategory(bodyFatPercentage, profile.getGender());
         OutputHelper.displayBodyFatPercentageResult(bodyFatPercentage, bodyFatCategory);
-        uiHelper.clear();
+        clear();
     }
 
     private void setWeeklyWeightGoal() {
@@ -132,12 +139,63 @@ public class UserInterface {
         WeightGoal goal = new WeightGoal(currentSession.getUsername(), goalType, rate, targetCalories);
         OutputHelper.displayWeightGoalResult(goalType, rate, targetCalories);
         goalManager.saveGoal(goal);
-        uiHelper.clear();
+        clear();
     }
 
     private void updateUserInformation() {
         System.out.println("\n*** Enter new information (press Enter to keep current value) ***");
-        uiHelper.updateUserProfile(currentSession);
-        uiHelper.clear();
+        userManager.updateUserProfile(currentSession);
+        clear();
+    }
+
+    private void trackCalorieIntake() {
+        LocalDate today = LocalDate.now();
+        WeightGoal goal = goalManager.getGoalForUser(currentSession.getUsername());
+        if (goal == null) {
+            System.out.println("You haven't set your weight goal yet. Setting one for you right now!");
+            setWeeklyWeightGoal();
+            goal = goalManager.getGoalForUser(currentSession.getUsername());
+        }
+        double currentCalories = calorieTracker.getTotalCaloriesForDay(currentSession.getUsername(), today);
+        double targetCalories = goal.getTargetCalories();
+        OutputHelper.displayCalorieInfo(today, targetCalories, currentCalories);
+        Map<String, Double> foodEntries = calorieTracker.getDailyCalorieIntake(currentSession.getUsername(), today);
+        if (!foodEntries.isEmpty()) OutputHelper.displayFoodLog(foodEntries);
+        OutputHelper.displayFoodItemOptions();
+        int option = InputHelper.readInt();
+        if (option == 1) addFoodItem(today, goal);
+        clear();
+    }
+
+    private void addFoodItem(LocalDate today, WeightGoal goal) {
+        System.out.print("Enter food item name: ");
+        String foodItem = InputHelper.readLine();
+        System.out.print("Enter calories: ");
+        double calories = InputHelper.readDouble();
+
+        calorieTracker.addCalorieIntake(currentSession.getUsername(), today, foodItem, calories);
+        double newTotal = calorieTracker.getTotalCaloriesForDay(currentSession.getUsername(), today);
+        OutputHelper.displayCalorieIntakeUpdatedInfo(foodItem, calories, newTotal, goal.getTargetCalories());
+    }
+
+
+
+    public void clear() {
+        System.out.println("\n\nPress Enter to continue...");
+        InputHelper.readLine();
+        clearConsole();
+    }
+
+    private void clearConsole(){
+        try {
+            if (System.getProperty("os.name").contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
