@@ -1,18 +1,10 @@
 import java.io.IOException;
 
 public class UserManager {
-    private final AuthService authService;
-    private static UserManager instance;
+    private final IAuthService authService;
 
-    private UserManager() {
-        this.authService = AuthService.getInstance();
-    }
-
-    public static UserManager getInstance() {
-        if (instance == null) {
-            instance = new UserManager();
-        }
-        return instance;
+    public UserManager(IAuthService authService) {
+        this.authService = authService;
     }
 
     public UserSession login() {

@@ -6,15 +6,15 @@ import java.util.Map;
 public class UserInterface {
     private UserSession currentSession;
     private final UserManager userManager;
-    private final WeightGoalManager goalManager;
-    private final CalorieTracker calorieTracker;
-    private final WaterTracker waterTracker;
+    private final IWeightGoalManager goalManager;
+    private final ICalorieTracker calorieTracker;
+    private final IWaterTracker waterTracker;
 
-    public UserInterface() {
-        this.userManager = UserManager.getInstance();
-        this.goalManager = WeightGoalManager.getInstance();
-        this.calorieTracker = CalorieTracker.getInstance();
-        this.waterTracker = WaterTracker.getInstance();
+    public UserInterface(UserManager userManager, IWeightGoalManager goalManager, ICalorieTracker calorieTracker, IWaterTracker waterTracker) {
+        this.userManager = userManager;
+        this.goalManager = goalManager;
+        this.calorieTracker = calorieTracker;
+        this.waterTracker = waterTracker;
     }
 
     public void start() {
