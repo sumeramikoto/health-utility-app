@@ -27,11 +27,9 @@ public class OutputHelper {
 
     public static void displayActivityLevelMenu() {
         System.out.println("=== Select Activity Level ===");
-        System.out.println("1. Sedentary (little or no exercise)");
-        System.out.println("2. Lightly active (light exercise/sports 1-3 days/week)");
-        System.out.println("3. Moderately active (moderate exercise/sports 3-5 days/week)");
-        System.out.println("4. Very active (hard exercise/sports 6-7 days a week)");
-        System.out.println("5. Extra active (very hard exercise, physical job or training twice a day)");
+        for (ActivityLevel level : ActivityLevel.values()) {
+            System.out.println(level.getLevel() + ". " + level.getDescription());
+        }
         System.out.print("Enter activity level: ");
     }
 
