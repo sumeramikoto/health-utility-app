@@ -6,9 +6,17 @@ import java.util.List;
 public class WaterTracker {
     private final String WATER_INTAKE_CSV = "water_intake.csv";
     private final double STANDARD_WATER_RECOMMENDATION_ML_PER_KG = 35;
+    private static WaterTracker instance;
 
-    public WaterTracker() {
+    private WaterTracker() {
         initializeFile();
+    }
+
+    public static WaterTracker getInstance() {
+        if (instance == null) {
+            instance = new WaterTracker();
+        }
+        return instance;
     }
 
     private void initializeFile() {

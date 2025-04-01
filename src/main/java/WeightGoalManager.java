@@ -4,9 +4,17 @@ import java.util.List;
 
 public class WeightGoalManager {
     private final String GOALS_CSV = "goals.csv";
+    private static WeightGoalManager instance;
 
-    public WeightGoalManager() {
+    private WeightGoalManager() {
         initializeFile();
+    }
+
+    public static WeightGoalManager getInstance() {
+        if (instance == null) {
+            instance = new WeightGoalManager();
+        }
+        return instance;
     }
 
     private void initializeFile() {
