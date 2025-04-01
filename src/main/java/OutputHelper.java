@@ -107,4 +107,27 @@ public class OutputHelper {
         System.out.printf("New total: %.2f calories\n", newTotal);
         System.out.printf("Remaining: %.2f calories\n", targetCalories - newTotal);
     }
+
+    public static void displayWaterIntakeInfo(LocalDate today, double recommendedIntake, double currentIntake) {
+        double progressPercentage = (currentIntake / recommendedIntake) * 100;
+        System.out.println("=== Water Intake Tracker ===");
+        System.out.println("Date: " + today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        System.out.printf("Recommended daily intake: %.0f ml\n", recommendedIntake);
+        System.out.printf("Current intake for today: %.2f ml\n", currentIntake);
+        System.out.printf("Progress: %.2f%%\n", progressPercentage);
+    }
+
+    public static void displayWaterIntakeOptions() {
+        System.out.println("*** Options ***");
+        System.out.println("1. Add water intake");
+        System.out.println("2. Return to main menu");
+        System.out.print("Select an option: ");
+    }
+
+    public static void displayWaterIntakeUpdatedInfo(double newCurrentIntake, double recommendedIntake) {
+        double progressPercentage = (newCurrentIntake / recommendedIntake) * 100;
+        System.out.println("*** Water Intake Updated ***");
+        System.out.printf("Current intake for today: %.2f ml\n", newCurrentIntake);
+        System.out.printf("Progress: %.2f%%\n", progressPercentage);
+    }
 }
