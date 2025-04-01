@@ -137,11 +137,14 @@ public class UserInterface {
         clearConsole();
         UserProfile profile = currentSession.getProfile();
         OutputHelper.displayWeightGoalMenu();
-        int goalChoice = InputHelper.getInt1or2();
-        String goalType = (goalChoice == 1) ? "gain" : "loss";
-        OutputHelper.displayWeightGoalPaceMenu();
-        int paceChoice = InputHelper.getInt1or2();
-        double rate = (paceChoice == 1) ? 0.5 : 1;
+        int goalChoice = InputHelper.getIntInRange(1, 3);
+        String goalType = getWeightGoalType(goalChoice);
+        double rate = 0;
+        if (!goalType.equalsIgnoreCase("maintain")) {
+            OutputHelper.displayWeightGoalPaceMenu();
+            int paceChoice = InputHelper.getIntInRange(1, 2);
+            rate = (paceChoice == 1) ? 0.5 : 1;
+        }
         double bmr = CalculatorUtil.calculateBMR(profile.getGender(), profile.getWeightKG(), profile.getHeightCM(), profile.getAge());
         double activityLevelMultiplier = ActivityLevel.fromLevel(profile.getActivityLevel()).getMultiplier();
         double tdee = CalculatorUtil.calculateTDEE(bmr, activityLevelMultiplier);
@@ -151,6 +154,12 @@ public class UserInterface {
         OutputHelper.displayWeightGoalResult(goalType, rate, targetCalories);
         goalManager.saveGoal(goal);
         clear();
+    }
+
+    private String getWeightGoalType(int goalChoice) {
+        if (goalChoice == 1) return "gain";
+        if (goalChoice == 2) return "loss";
+        else return "maintain";
     }
 
     private void updateUserInformation() {
@@ -175,7 +184,7 @@ public class UserInterface {
         Map<String, Double> foodEntries = calorieTracker.getDailyCalorieIntake(currentSession.getUsername(), today);
         if (!foodEntries.isEmpty()) OutputHelper.displayFoodLog(foodEntries);
         OutputHelper.displayFoodItemOptions();
-        int option = InputHelper.getInt1or2();
+        int option = InputHelper.getIntInRange(1, 2);
         if (option == 1) addFoodItem(today, goal);
         clear();
     }
@@ -199,7 +208,7 @@ public class UserInterface {
         double recommendedIntake = waterTracker.getRecommendedIntake(profile);
         OutputHelper.displayWaterIntakeInfo(today, recommendedIntake, currentIntake);
         OutputHelper.displayWaterIntakeOptions();
-        int option = InputHelper.getInt1or2();
+        int option = InputHelper.getIntInRange(1, 2);
         if (option == 1) addWaterIntake(today, recommendedIntake);
         clear();
     }

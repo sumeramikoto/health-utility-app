@@ -61,6 +61,7 @@ public class OutputHelper {
         System.out.println("=== Weekly Weight Goal ===");
         System.out.println("1. Gain Weight");
         System.out.println("2. Lose Weight");
+        System.out.println("3. Maintain Weight");
         System.out.print("Enter your desired goal: ");
     }
 
