@@ -1,3 +1,7 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Map;
+
 public class OutputHelper {
     public static void displayAuthMenu() {
         System.out.println("1. Login");
@@ -73,5 +77,34 @@ public class OutputHelper {
         System.out.println("Your weekly weight goal has been set!");
         System.out.println("Your goal is to " + goalType + " weight by " + rate + " kg/week");
         System.out.printf("Your target calories for this week will be %.2f calories/day\n", targetCalories);
+    }
+
+    public static void displayCalorieInfo(LocalDate today, double targetCalories, double currentCalories) {
+        System.out.println("=== Calorie Intake Tracker ===");
+        System.out.println("Date: " + today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        System.out.printf("Target daily calories: %.2f calories\n", targetCalories);
+        System.out.printf("Current intake today: %.2f calories\n", currentCalories);
+        System.out.printf("Remaining: %.2f calories\n", targetCalories - currentCalories);
+    }
+
+    public static void displayFoodLog(Map<String, Double> foodEntries) {
+        System.out.println("\n*** Today's Food Log ***");
+        for (Map.Entry<String, Double> entry : foodEntries.entrySet()) {
+            System.out.println("- " + entry.getKey() + ": " + String.format("%.0f", entry.getValue()) + " calories");
+        }
+    }
+
+    public static void displayFoodItemOptions() {
+        System.out.println("*** Options ***");
+        System.out.println("1. Add food item");
+        System.out.println("2. Return to main menu");
+        System.out.print("Select an option: ");
+    }
+
+    public static void displayCalorieIntakeUpdatedInfo(String foodItem, double foodCalories, double newTotal, double targetCalories) {
+        System.out.println("*** Calorie Intake Updated ***");
+        System.out.printf("Added: %s (%.2f calories)\n", foodItem, foodCalories);
+        System.out.printf("New total: %.2f calories\n", newTotal);
+        System.out.printf("Remaining: %.2f calories\n", targetCalories - newTotal);
     }
 }
