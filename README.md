@@ -4,16 +4,18 @@ Coeur is a terminal-based health tracking utility app built in Java that allows 
 ## Features
 
 - **BMI Calculation:** The user’s Body Mass Index (BMI) is calculated based on their height and weight.
+
+- **BMR Calculation:** The user’s Basal Metabolic Rate (BMR) is calculated based on their height, weight, age and gender using the Mifflin-St. Jeor Equation.
     
 - **TDEE Calculation:** The user’s Today Daily Energy Expenditure (TDEE) is calculated based on their BMR and activity level.
     
--  **Body Fat Percentage Calculation:** The user’s body fat percentage is calculated based on their gender and respective body measurements using the U.S. Navy method.
+- **Body Fat Percentage Calculation:** The user’s body fat percentage is calculated based on their gender and respective body measurements using the U.S. Navy method.
     
--  **Setting Weekly Weight Goals:** The user can set weekly weight goals (gaining, losing or maintaining weight) and get the required daily caloric intake for the goal.
+- **Setting Weekly Weight Goals:** The user can set weekly weight goals (gaining, losing or maintaining weight) and get the required daily caloric intake for the goal.
     
--  **Tracking Daily Calories:** The user can track their daily caloric intake by adding a food item and the calories consumed.
+- **Tracking Daily Calories:** The user can track their daily caloric intake by adding a food item and the calories consumed.
     
--  **Tracking Daily Water Intake:** The user is shown their recommended water intake based on their weight. They can track their daily water intake by inputting the amount of water that they’ve drunk.
+- **Tracking Daily Water Intake:** The user is shown their recommended water intake based on their weight. They can track their daily water intake by inputting the amount of water that they’ve drunk.
 
 - **Updating User Information:** The user can change their age, height, weight and activity level if they want to.
 
