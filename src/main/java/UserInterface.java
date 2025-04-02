@@ -114,12 +114,17 @@ public class UserInterface {
     private void viewTDEE() {
         clearConsole();
         UserProfile profile = currentSession.getProfile();
-        double bmr = CalculatorUtil.calculateBMR(profile.getGender(), profile.getWeightKG(), profile.getHeightCM(), profile.getAge());
-        double activityLevelMultiplier = ActivityLevel.fromLevel(profile.getActivityLevel()).getMultiplier();
-        double tdee = CalculatorUtil.calculateTDEE(bmr, activityLevelMultiplier);
+        double tdee = getTDEE(profile);
         OutputHelper.displayTDEEResult(tdee);
         clear();
     }
+
+    private double getTDEE(UserProfile profile) {
+        double bmr = CalculatorUtil.calculateBMR(profile.getGender(), profile.getWeightKG(), profile.getHeightCM(), profile.getAge());
+        double activityLevelMultiplier = ActivityLevel.fromLevel(profile.getActivityLevel()).getMultiplier();
+        return CalculatorUtil.calculateTDEE(bmr, activityLevelMultiplier);
+    }
+
 
     private void calculateBodyFatPercentage() {
         clearConsole();
@@ -153,9 +158,7 @@ public class UserInterface {
             int paceChoice = InputHelper.getIntInRange(1, 2);
             rate = (paceChoice == 1) ? 0.5 : 1;
         }
-        double bmr = CalculatorUtil.calculateBMR(profile.getGender(), profile.getWeightKG(), profile.getHeightCM(), profile.getAge());
-        double activityLevelMultiplier = ActivityLevel.fromLevel(profile.getActivityLevel()).getMultiplier();
-        double tdee = CalculatorUtil.calculateTDEE(bmr, activityLevelMultiplier);
+        double tdee = getTDEE(profile);
         double calorieAdjustment = rate * 1000;
         double targetCalories = (goalType.equalsIgnoreCase("gain")) ? tdee + calorieAdjustment : tdee - calorieAdjustment;
         WeightGoal goal = new WeightGoal(currentSession.getUsername(), goalType, rate, targetCalories);
