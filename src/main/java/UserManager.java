@@ -16,9 +16,7 @@ public class UserManager {
             UserCredentials credentials = authService.authenticate(username, password);
             if (credentials != null) {
                 UserProfile profile = authService.getUserProfile(username);
-                UserSession currentSession = new UserSession(credentials, profile);
-                System.out.println("Login successful!");
-                return currentSession;
+                return new UserSession(credentials, profile);
             } else {
                 System.out.println("Invalid username or password.");
             }
@@ -54,9 +52,7 @@ public class UserManager {
         try {
             boolean success = authService.registerUser(credentials, profile);
             if (success) {
-                UserSession currentSession = new UserSession(credentials, profile);
-                System.out.println("Registration successful!");
-                return currentSession;
+                return new UserSession(credentials, profile);
             } else {
                 System.out.println("Username already exists. Please try another one.");
             }

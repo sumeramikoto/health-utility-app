@@ -36,15 +36,21 @@ public class UserInterface {
             case 1:
                 clearConsole();
                 currentSession = userManager.login();
+                clearConsole();
+                System.out.println("Login successful!");
                 return true;
             case 2:
                 clearConsole();
                 currentSession = userManager.register();
+                clearConsole();
+                System.out.println("Registration successful!");
                 return true;
             case 3:
+                clearConsole();
                 System.out.println("Goodbye!");
                 return false;
             default:
+                clearConsole();
                 System.out.println("Invalid option. Please try again.");
                 return true;
         }
