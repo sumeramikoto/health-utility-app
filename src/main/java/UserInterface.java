@@ -85,7 +85,7 @@ public class UserInterface {
     private void viewUserProfile() {
         clearConsole();
         UserProfile profile = currentSession.getProfile();
-        System.out.println("=== " + currentSession.getUsername() + "'s Profile ===");
+        System.out.println("=== " + currentSession.getUsername() + "'s profile ===");
         System.out.println("Age: " + profile.getAge());
         System.out.println("Height: " + profile.getHeightM() + " m");
         System.out.println("Weight: " + profile.getWeightKG() + " kg");
@@ -133,17 +133,22 @@ public class UserInterface {
         double waistCM = InputHelper.readDouble();
         System.out.print("Enter your neck circumference (cm): ");
         double neckCM = InputHelper.readDouble();
-        double bodyFatPercentage = 0;
+        double bodyFatPercentage = getBodyFatPercentage(profile, waistCM, neckCM);
+        String bodyFatCategory = CategoryUtil.getBodyFatCategory(bodyFatPercentage, profile.getGender());
+        OutputHelper.displayBodyFatPercentageResult(bodyFatPercentage, bodyFatCategory);
+        clear();
+    }
+
+    private double getBodyFatPercentage(UserProfile profile, double waistCM, double neckCM) {
+        double bodyFatPercentage;
         if (profile.getGender().equalsIgnoreCase("female")) {
             System.out.print("Enter your hip circumference (cm): ");
             double hipCM = InputHelper.readDouble();
             bodyFatPercentage = CalculatorUtil.calculateFemaleBodyFatPercentage(profile.getHeightCM(), waistCM, hipCM, neckCM);
         } else {
-            bodyFatPercentage = CalculatorUtil.calculateMaleBodyFatPercentage(profile.getHeightCM(), waistCM,neckCM);
+            bodyFatPercentage = CalculatorUtil.calculateMaleBodyFatPercentage(profile.getHeightCM(), waistCM, neckCM);
         }
-        String bodyFatCategory = CategoryUtil.getBodyFatCategory(bodyFatPercentage, profile.getGender());
-        OutputHelper.displayBodyFatPercentageResult(bodyFatPercentage, bodyFatCategory);
-        clear();
+        return bodyFatPercentage;
     }
 
     private void setWeeklyWeightGoal() {
